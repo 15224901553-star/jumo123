@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络安全防护系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00c9ff, #92fe9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .status-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #4fc3f7;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h2 i {
+            margin-right: 10px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .online {
+            background-color: #4caf50;
+            box-shadow: 0 0 10px #4caf50;
+        }
+        
+        .offline {
+            background-color: #f44336;
+            box-shadow: 0 0 10px #f44336;
+        }
+        
+        .warning {
+            background-color: #ff9800;
+            box-shadow: 0 0 10px #ff9800;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .access-control {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .access-control h2 {
+            margin-bottom: 20px;
+            color: #4fc3f7;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(90deg, #00c9ff, #92fe9d);
+            color: #0f2027;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
+        }
+        
+        .traffic-monitor {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .traffic-monitor h2 {
+            margin-bottom: 20px;
+            color: #4fc3f7;
+        }
+        
+        .traffic-chart {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to top, #00c9ff, #92fe9d);
+            border-radius: 3px 3px 0 0;
+            transition: height 1s;
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .instructions h2 {
+            margin-bottom: 20px;
+            color: #4fc3f7;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .status-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>网络安全防护系统</h1>
+            <p class="subtitle">DDoS防护 | 外部访问控制 | 实时监控</p>
+        </header>
+        
+        <div class="status-panel">
+            <div class="card">
+                <h2>防护状态</h2>
+                <div class="status-indicator">
+                    <div class="status-dot online"></div>
+                    <span>DDoS防护已启用</span>
+                </div>
+                <p>高防IP已配置，正在过滤恶意流量</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">防护成功率</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">今日攻击次数</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>网络状态</h2>
+                <div class="status-indicator">
+                    <div class="status-dot online"></div>
+                    <span>网络连接正常</span>
+                </div>
+                <p>外部访问已开启，服务运行稳定</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">245</div>
+                        <div class="stat-label">当前连接数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1.2G</div>
+                        <div class="stat-label">带宽使用</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>系统状态</h2>
+                <div class="status-indicator">
+                    <div class="status-dot online"></div>
+                    <span>所有服务运行正常</span>
+                </div>
+                <p>CPU、内存和存储使用率正常</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">32%</div>
+                        <div class="stat-label">CPU使用率</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">47%</div>
+                        <div class="stat-label">内存使用率</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="access-control">
+            <h2>访问控制</h2>
+            <div class="form-group">
+                <label for="ip-range">允许访问的IP范围</label>
+                <input type="text" id="ip-range" value="0.0.0.0/0" placeholder="例如: 192.168.1.0/24">
+            </div>
+            <div class="form-group">
+                <label for="geo-restriction">地域限制</label>
+                <select id="geo-restriction">
+                    <option value="all">允许所有地区</option>
+                    <option value="specific">仅允许特定地区</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="rate-limit">请求频率限制 (请求/秒)</label>
+                <input type="number" id="rate-limit" value="100" min="1" max="1000">
+            </div>
+            <button id="apply-settings">应用设置</button>
+        </div>
+        
+        <div class="traffic-monitor">
+            <h2>流量监控</h2>
+            <div class="traffic-chart" id="traffic-chart">
+                <!-- 图表柱状图将通过JavaScript动态生成 -->
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">2.4G</div>
+                    <div class="stat-label">入站流量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1.8G</div>
+                    <div class="stat-label">出站流量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12.5K</div>
+                    <div class="stat-label">拦截请求</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>配置说明</h2>
+            <ol>
+                <li>此页面仅为状态监控界面，实际DDoS防护需要在网络层面配置</li>
+                <li>要实现外部访问，请确保防火墙已开放相应端口</li>
+                <li>建议使用专业DDoS防护服务（如Cloudflare、阿里云高防IP等）</li>
+                <li>定期更新系统和应用程序以修复安全漏洞</li>
+                <li>监控系统日志，及时发现异常访问模式</li>
+            </ol>
+        </div>
+        
+        <footer>
+            <p>网络安全防护系统 &copy; 2023 | 最后更新: 2023-11-15</p>
+        </footer>
+    </div>
+
+    <script>
+        // 模拟流量图表
+        function initTrafficChart() {
+            const chart = document.getElementById('traffic-chart');
+            chart.innerHTML = '';
+            
+            const barCount = 12;
+            const maxHeight = 180;
+            
+            for (let i = 0; i < barCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                
+                // 随机高度，但总体趋势是中间高两边低
+                let height;
+                if (i < 4 || i > 7) {
+                    height = Math.random() * 60 + 30;
+                } else {
+                    height = Math.random() * 100 + 80;
+                }
+                
+                bar.style.height = `${height}px`;
+                bar.style.left = `${(i * 80 / barCount) + 5}%`;
+                bar.style.width = `${70 / barCount}%`;
+                
+                chart.appendChild(bar);
+            }
+        }
+        
+        // 应用设置按钮事件
+        document.getElementById('apply-settings').addEventListener('click', function() {
+            const ipRange = document.getElementById('ip-range').value;
+            const geoRestriction = document.getElementById('geo-restriction').value;
+            const rateLimit = document.getElementById('rate-limit').value;
+            
+            alert(`设置已更新:\nIP范围: ${ipRange}\n地域限制: ${geoRestriction}\n频率限制: ${rateLimit} 请求/秒\n\n注意: 此演示页面仅显示UI，实际配置需要在服务器端完成。`);
+        });
+        
+        // 初始化页面
+        window.addEventListener('load', function() {
+            initTrafficChart();
+            
+            // 每5秒更新一次流量图表
+            setInterval(initTrafficChart, 5000);
+        });
+    </script>
+</body>
+</html>
